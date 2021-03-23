@@ -1,0 +1,54 @@
+import { FaTwitterSquare } from "https://cdn.skypack.dev/react-icons/fa";
+import {
+	motion,
+	AnimatePresence
+} from "https://cdn.skypack.dev/framer-motion@4.0.0";
+
+const url = "https://api.quotable.io/random";
+
+class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			quote: "",
+			author: ""
+		};
+		this.getQuote = this.getQuote.bind(this);
+	}
+
+	componentDidMount() {
+		this.getQuote();
+	}
+
+	getQuote() {
+		fetch(url).then((quoteObject) =>
+			quoteObject.json().then((quoteObject) => {
+				this.setState({
+					input: quoteObject.content,
+					author: quoteObject.author
+				});
+			})
+		);
+	}
+
+	render() {
+		return (
+			<>
+				<h1 id="text" animate={{ opacity: 1 }}>
+					{this.state.input}
+				</h1>
+				<p id="author">~ {this.state.author}</p>
+				<div>
+					<a id="tweet-quote" href="twitter.com/intent/tweet" target="_top">
+						<FaTwitterSquare style={{ height: 50 }} />
+					</a>
+					<button id="new-quote" onClick={this.getQuote}>
+						New quote
+					</button>
+				</div>
+			</>
+		);
+	}
+}
+
+ReactDOM.render(<App />, document.getElementById("quote-box"));
